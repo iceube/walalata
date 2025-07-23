@@ -18,7 +18,7 @@
 Hugo有三种版本：&lt;br&gt;
 标准版（standard）、扩展版（extended）和扩展/部署版（extended/deploy）。标准版提供核心功能，而扩展版和扩展/部署版提供高级功能。&lt;br&gt;
 除非特定部署需求需要扩展/部署版，官方推荐使用扩展版。&lt;/p&gt;
-&lt;h2 id=&#34;开始&#34;&gt;开始&lt;/h2&gt;
+&lt;h2 id=&#34;开始-本地调试&#34;&gt;开始-本地调试&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;下载 Git 。&lt;/li&gt;
 &lt;li&gt;下载 Hugo ,地址：&lt;a href=&#34;https://github.com/gohugoio/hugo/releases&#34;&gt;Hugo&lt;/a&gt; ，解压缩到目的目录，编辑环境变量。&lt;/li&gt;
@@ -37,12 +37,44 @@ Hugo有三种版本：&lt;br&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;生成第一篇文档&lt;br&gt;
 记得修改 draft = false，默认不渲染草稿（draft = true）.
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;myblog&amp;gt;hugo new content/posts/first-post.md  # 生成 Markdown 文件
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  myblog&amp;gt;hugo new content/posts/first-post.md  # 生成 Markdown 文件
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;发现换行存在问题，查询相关资料，发现 Hugo 中的换行需要两个回车，但是可以通过修改&lt;code&gt;hugo.toml&lt;/code&gt;保持一致。添加如下代码段：
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;markup&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;goldmark&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;renderer&lt;/span&gt;]
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;hardWraps&lt;/span&gt; = &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;/ul&gt;
+&lt;h2 id=&#34;部署-netlify&#34;&gt;部署-Netlify&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;将项目托管到 Github 上&lt;br&gt;
+创建一个公开的仓库用来存放项目。
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-git&#34; data-lang=&#34;git&#34;&gt;git init
+git add.
+git commit -m &amp;#34;first commit&amp;#34;
+git branch -M main
+git remote add origin https://github.com/iceube/walalata.git
+git push -u origin main
+&lt;/code&gt;&lt;/pre&gt;如果有&lt;strong&gt;网络问题&lt;/strong&gt;，可以看看自己科学上网的代理端口是什么，修改成对应的
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-git&#34; data-lang=&#34;git&#34;&gt;# 临时使用代理（示例）
+export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;在 Netlify 上部署&lt;br&gt;
+参考：&lt;a href=&#34;https://hugo.opendocs.io/hosting-and-deployment/hosting-on-netlify/&#34;&gt;在 Netlify 上托管 | Hugo官方文档&lt;/a&gt;&lt;br&gt;
+可是使用 GitHub 账号登陆。
+&lt;ul&gt;
+&lt;li&gt;一些注意点：
+&lt;ol&gt;
+&lt;li&gt;Build command: hugo&lt;/li&gt;
+&lt;li&gt;Publish directory: public&lt;/li&gt;
+&lt;li&gt;添加环境变量：&lt;br&gt;
+key: HUGO_VERSION&lt;br&gt;
+value: 版本号（例如：0.148.1）&lt;/li&gt;
+&lt;li&gt;修改 &lt;code&gt;hugo.toml&lt;/code&gt;中的&lt;code&gt;baseURL&lt;/code&gt;为分配给你的站点&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description>
     </item>
   </channel>
 </rss>

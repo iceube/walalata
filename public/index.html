@@ -115,9 +115,14 @@
 Hugo有三种版本：
 标准版（standard）、扩展版（extended）和扩展/部署版（extended/deploy）。标准版提供核心功能，而扩展版和扩展/部署版提供高级功能。
 除非特定部署需求需要扩展/部署版，官方推荐使用扩展版。
-开始 下载 Git 。 下载 Hugo ,地址：Hugo ，解压缩到目的目录，编辑环境变量。 初始化站点 hugo new site myblog # 生成站点目录，myblog 可以是任何站点名称 cd myblog # 进入创建的站点 下载主题，hugo 提供很多主题Hugo themes，放到themes文件夹下
+开始-本地调试 下载 Git 。 下载 Hugo ,地址：Hugo ，解压缩到目的目录，编辑环境变量。 初始化站点 hugo new site myblog # 生成站点目录，myblog 可以是任何站点名称 cd myblog # 进入创建的站点 下载主题，hugo 提供很多主题Hugo themes，放到themes文件夹下
 需要在hugo.toml中指定主题名（同主题文件夹名称一致），例如： baseURL = &#39;https://example.org/&#39; languageCode = &#39;en-us&#39; title = &#39;My New Hugo Site&#39; theme = &#39;PaperMod&#39; 生成第一篇文档
-记得修改 draft = false，默认不渲染草稿（draft = true）. myblog&gt;hugo new content/posts/first-post.md # 生成 Markdown 文件 发现换行存在问题，查询相关资料，发现 Hugo 中的换行需要两个回车，但是可以通过修改hugo.toml保持一致。添加如下代码段： [markup.goldmark.renderer] hardWraps = true </p>
+记得修改 draft = false，默认不渲染草稿（draft = true）. myblog&gt;hugo new content/posts/first-post.md # 生成 Markdown 文件 发现换行存在问题，查询相关资料，发现 Hugo 中的换行需要两个回车，但是可以通过修改hugo.toml保持一致。添加如下代码段： [markup.goldmark.renderer] hardWraps = true 部署-Netlify 将项目托管到 Github 上
+创建一个公开的仓库用来存放项目。 git init git add. git commit -m &#34;first commit&#34; git branch -M main git remote add origin https://github.com/iceube/walalata.git git push -u origin main 如果有网络问题，可以看看自己科学上网的代理端口是什么，修改成对应的 # 临时使用代理（示例） export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897 git push 在 Netlify 上部署
+参考：在 Netlify 上托管 | Hugo官方文档
+可是使用 GitHub 账号登陆。 一些注意点： Build command: hugo Publish directory: public 添加环境变量：
+key: HUGO_VERSION
+value: 版本号（例如：0.148.1） 修改 hugo.toml中的baseURL为分配给你的站点 </p>
   </div>
   <footer class="entry-footer"><span title='2025-07-23 16:48:34 +0800 CST'>July 23, 2025</span></footer>
   <a class="entry-link" aria-label="post link to Build My Simple Blog" href="http://localhost:1313/blogbuild/build-my-simple-blog/"></a>
