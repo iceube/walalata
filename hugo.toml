@@ -5,3 +5,4 @@ theme = 'PaperMod'
 
 [markup.goldmark.renderer]
   hardWraps = true
+  unsafe = true

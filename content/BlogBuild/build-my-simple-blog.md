@@ -64,3 +64,11 @@ theme = 'PaperMod'
 			key: HUGO_VERSION
 			value: 版本号（例如：0.148.1）
 		4. 修改 `hugo.toml`中的`baseURL`为分配给你的站点
+## 后续问题
+1. md 不能显示内嵌的 html
+	修改`hugo.toml`，补充`unsafe = true`：
+	~~~ toml
+	[markup.goldmark.renderer]
+	  hardWraps = true
+	  unsafe = true
+	~~~
