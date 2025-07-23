@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>BitCoin: A Peer to Peer Electronic Cash System | Walalata</title>
+<meta name="keywords" content="">
+<meta name="description" content="论文解读
+目标：一个点对点的双花问题（double-spending）解决方案
+方法：链式结构，hash，PoW，最长合法链，广播
+结果：不可篡改
+具体设计
+交易：
+一枚电子货币是一连串数字签名（Digital signatures）：每一位所有者对前一次交易和下一位拥有者的公钥（Public Key）签署一个随机散列的数字签名，并将这个签名附加在电子货币尾部，电子货币就发送给下一位所有者。收款人通过对签名进行验证（使用发布者的公钥），就能够验证该链条的所有者。（此时并不能防范双花问题）
+
+	
+	BAPPECS-交易流程图
+
+时间戳服务器（Timestamp Server）：（双花问题的解决）
+每个时间戳应当将前一个时间戳纳入 hash，形成链条
+
+  
+  BAPPECS-时间戳服务器
+
+工作量证明（Proof of Work）：
+SHA-256
+所需平均工作量与所需零位数呈指数关系，并且可以通过执行单个哈希来验证。
+随机数（Nonce）使得区块满足；
+一旦CPU耗费的工作量被用来满足工作量证明，该区块就不能在不重做工作的情况下被更改。由于后续的区块在其之后被链接，更改该区块的工作将包括重做其后的所有区块。（不可篡改）
+
+  
+  BAPPECS-工作量证明
+
+PoW 同时解决投票问题，本质是one-CPU-one-vote
+要修改过去的区块，攻击者必须重新完成该区块及其后所有区块的工作量证明，然后才能赶上并超过诚实节点的努力。（成功概率呈指数化递减）
+工作量证明的难度（the proof-of-work difficulty）采用移动平均目标的方法决定，即令难度指向令每小时生成区块的速度为某一个预定的平均数。
+网络：
+
+新交易向全节点广播
+每个节点将新交易纳入一个区块
+每个节点都尝试在自己的区块找到一个具有足够难度的工作量证明
+当找到一个 proof-of-work，就向全节点广播
+只有当区块中的交易都是合法且不曾存在过的，其它节点才会认同该区块的有效性（只要有足够多的节点承认就可以达成共识，对丢失信息有一定的容错能力）
+其它节点表示接受的方法是跟随在该区块的末尾
+
+可能出现同时广播，各节点会在率先收到的区块基础上进行工作，僵局（tie）会在下一个工作量证明的时候被打破，其中一个会变更长，成为合法链。
+激励：
+
+每个区块的第一笔交易（特殊交易）可以创造新币（由区块构建者）。
+交易费（transaction fees）：输入值与输出值的差额
+
+回收硬盘空间：
+Merkle tree：只有根（root）被纳入区块的 hash。老区块可以通过分枝拔除（stubbing）的方法被压缩。
+
+  
+  BAPPECS-Merkle tree 示意图
+
+设定区块生成速率是 10 分钟 1 个。不含交易信息的区块头（Block header）大小仅有 80 字节。一年产生的数据位为4.2 MB。
+简化的支付确认（Simplified Payment Verification）：
+用户需要保留最长合法链的区块头副本（不断向网络发起询问），可以通过 merkle 的分支通向它被加上时间戳并纳入区块的那次交易。它不能自行验证交易的有效性，但通过追溯位置，可以看到交易被接受。
+
+  
+   BAPPECS-确认机制
+
+当诚实节点控制网络时，检验机制是可靠的。但是可能被计算力占优的攻击者攻击成功。
+价值的组合与分割（Combining and Splitting Value）">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/bitcoin-a-peer-to-peer-electronic-cash-system/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ac00093c6c8a784d8aeb94b276dbd6c5468e5b3c16b4fe74599df76c241a557.css" integrity="sha256-asAAk8bIp4TYrrlLJ229bFRo5bPBa0/nRZnfdsJBpVc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/bitcoin-a-peer-to-peer-electronic-cash-system/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Walalata (Alt + H)">Walalata</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      BitCoin: A Peer to Peer Electronic Cash System
+    </h1>
+    <div class="post-meta"><span title='2025-07-23 18:12:47 +0800 CST'>July 23, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="论文解读">论文解读<a hidden class="anchor" aria-hidden="true" href="#论文解读">#</a></h2>
+<p><strong>目标</strong>：一个点对点的双花问题（double-spending）解决方案</p>
+<p><strong>方法</strong>：链式结构，hash，PoW，最长合法链，广播</p>
+<p><strong>结果</strong>：不可篡改</p>
+<h3 id="具体设计">具体设计<a hidden class="anchor" aria-hidden="true" href="#具体设计">#</a></h3>
+<p><strong>交易</strong>：</p>
+<p>一枚电子货币是一连串数字签名（Digital signatures）：每一位所有者对前一次交易和下一位拥有者的公钥（Public Key）签署一个随机散列的数字签名，并将这个签名附加在电子货币尾部，电子货币就发送给下一位所有者。收款人通过对签名进行验证（使用发布者的公钥），就能够验证该链条的所有者。（此时并不能防范双花问题）</p>
+<figure style="text-align">
+	<img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/transactions.svg">
+	<center><figcaption>BAPPECS-交易流程图</figcaption></center>
+</figure>
+<p><strong>时间戳服务器</strong>（Timestamp Server）：（双花问题的解决）</p>
+<p>每个时间戳应当将前一个时间戳纳入 hash，形成链条</p>
+<figure style="text-align">
+  <img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/timestamp-server.svg">
+  <center><figcaption>BAPPECS-时间戳服务器</figcaption></center>
+</figure>
+<p><strong>工作量证明</strong>（Proof of Work）：</p>
+<p>SHA-256</p>
+<p>所需平均工作量与所需零位数呈指数关系，并且可以通过执行单个哈希来验证。</p>
+<p>随机数（Nonce）使得区块满足；</p>
+<p>一旦CPU耗费的工作量被用来满足工作量证明，该区块就不能在不重做工作的情况下被更改。由于后续的区块在其之后被链接，更改该区块的工作将包括重做其后的所有区块。（不可篡改）</p>
+<figure style="text-align">
+  <img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/proof-of-work.svg">
+  <center><figcaption>BAPPECS-工作量证明</figcaption></center>
+</figure>
+<p>PoW 同时解决投票问题，本质是one-CPU-one-vote</p>
+<p>要修改过去的区块，攻击者必须重新完成该区块及其后所有区块的工作量证明，然后才能赶上并超过诚实节点的努力。（成功概率呈指数化递减）</p>
+<p>工作量证明的难度（the proof-of-work difficulty）采用移动平均目标的方法决定，即令难度指向令每小时生成区块的速度为某一个预定的平均数。</p>
+<p><strong>网络</strong>：</p>
+<ol>
+<li>新交易向全节点广播</li>
+<li>每个节点将新交易纳入一个区块</li>
+<li>每个节点都尝试在自己的区块找到一个具有足够难度的工作量证明</li>
+<li>当找到一个 proof-of-work，就向全节点广播</li>
+<li>只有当区块中的交易都是合法且不曾存在过的，其它节点才会认同该区块的有效性（只要有足够多的节点承认就可以达成共识，对丢失信息有一定的容错能力）</li>
+<li>其它节点表示接受的方法是跟随在该区块的末尾</li>
+</ol>
+<p>可能出现同时广播，各节点会在率先收到的区块基础上进行工作，僵局（tie）会在下一个工作量证明的时候被打破，其中一个会变更长，成为合法链。</p>
+<p><strong>激励</strong>：</p>
+<ol>
+<li>每个区块的第一笔交易（特殊交易）可以创造新币（由区块构建者）。</li>
+<li>交易费（transaction fees）：输入值与输出值的差额</li>
+</ol>
+<p><strong>回收硬盘空间</strong>：</p>
+<p>Merkle tree：只有根（root）被纳入区块的 hash。老区块可以通过分枝拔除（stubbing）的方法被压缩。</p>
+<figure style="text-align">
+  <img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/reclaiming-disk-space.svg">
+  <center><figcaption>BAPPECS-Merkle tree 示意图</figcaption></center>
+</figure>
+<p>设定区块生成速率是 10 分钟 1 个。不含交易信息的区块头（Block header）大小仅有 80 字节。一年产生的数据位为4.2 MB。</p>
+<p><strong>简化的支付确认（Simplified Payment Verification）：</strong></p>
+<p>用户需要保留最长合法链的区块头副本（不断向网络发起询问），可以通过 merkle 的分支通向它被加上时间戳并纳入区块的那次交易。它不能自行验证交易的有效性，但通过追溯位置，可以看到交易被接受。</p>
+<figure style="text-align">
+  <img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/simplified-payment-verification.svg">
+  <center><figcaption> BAPPECS-确认机制</figcaption></center>
+</figure>
+<p>当诚实节点控制网络时，检验机制是可靠的。但是可能被计算力占优的攻击者攻击成功。</p>
+<p><strong>价值的组合与分割（Combining and Splitting Value）</strong></p>
+<figure style="text-align">
+  <img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/combining-splitting-value.svg">
+  <center><figcaption>BAPPECS-价值的组合与分割</figcaption></center>
+</figure> 
+<p>一个（较大）或多个（较小）的输入</p>
+<p>输出最多有两个：支付；找零。</p>
+<p>隐私（Privacy）</p>
+<p>保护隐私的方法：保持匿名公钥（每次交易可以都生成新地址，但并行输入仍然有被追踪的风险）</p>
+ <figure style="text-align">
+  <img src="https://cdn.nakamotoinstitute.org/img/library/bitcoin/privacy.svg">
+  <center><figcaption>BAPPECS-隐私模型</figcaption></center>
+</figure>
+<p><strong>计算:</strong></p>
+<p>因为要验证交易的合法性，所以攻击者不能凭空创造价值或者掠夺不属于自己的货币，只能更改自己的交易信息，试图拿回自己刚付给别人的钱。</p>
+<p>诚实链条和攻击链条之间的竞争：二叉随机游走（Binomial Random Walk）</p>
+<p>成功事件：诚实链条延长一个区块，领先 + 1</p>
+<p>失败事件：攻击者链条延长一个区块，差距 - 1</p>
+<p>攻击者填补差距取代最长链可以近似地看作赌徒破产问题（Gambler&rsquo;s problem）。假定一个赌徒拥有无限的透支信用，然后开始进行潜在次数为无穷的赌博，试图填补上自己的亏空。我们可以计算赌徒填补上亏空的概率，也就是该攻击者赶上诚实链条的概率。</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt">
+    <mtr>
+      <mtd>
+        <mi>p</mi>
+      </mtd>
+      <mtd>
+        <mi></mi>
+        <mo>=</mo>
+        <mtext>probability an honest node finds the next block</mtext>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mi>q</mi>
+      </mtd>
+      <mtd>
+        <mi></mi>
+        <mo>=</mo>
+        <mtext>probability the attacker finds the next block</mtext>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <msub>
+          <mi>q</mi>
+          <mi>z</mi>
+        </msub>
+      </mtd>
+      <mtd>
+        <mi></mi>
+        <mo>=</mo>
+        <mrow>
+          <mtext>probability the attacker will ever catch up from&#xA0;</mtext>
+          <mrow data-mjx-texclass="ORD">
+            <mi>z</mi>
+          </mrow>
+          <mtext>&#xA0;blocks behind</mtext>
+        </mrow>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>
+<p>计算概率：</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mstyle mathsize="1.2em">
+    <msub>
+      <mi>q</mi>
+      <mi>z</mi>
+    </msub>
+    <mo>=</mo>
+    <mrow data-mjx-texclass="INNER">
+      <mo data-mjx-texclass="OPEN">{</mo>
+      <mtable columnspacing="1em" rowspacing="4pt">
+        <mtr>
+          <mtd>
+            <mn>1</mn>
+          </mtd>
+          <mtd>
+            <mtext>if</mtext>
+            <mstyle scriptlevel="0">
+              <mspace width="0.278em"></mspace>
+            </mstyle>
+            <mi>p</mi>
+            <mo>&#x2264;</mo>
+            <mi>q</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mo stretchy="false">(</mo>
+            <mi>q</mi>
+            <mrow data-mjx-texclass="ORD">
+              <mo>/</mo>
+            </mrow>
+            <mi>p</mi>
+            <msup>
+              <mo stretchy="false">)</mo>
+              <mi>z</mi>
+            </msup>
+          </mtd>
+          <mtd>
+            <mtext>if</mtext>
+            <mstyle scriptlevel="0">
+              <mspace width="0.278em"></mspace>
+            </mstyle>
+            <mi>p</mi>
+            <mo>&gt;</mo>
+            <mi>q</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+      <mo data-mjx-texclass="CLOSE">}</mo>
+    </mrow>
+  </mstyle>
+</math>
+<p>动态密钥对（Dynamic Key Pairs）防止预计算攻击（Precomputation Attack）</p>
+<p>攻击者的潜在进展是一个泊松分布，期望值为</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>&#x3BB;</mi>
+  <mo>=</mo>
+  <mi>z</mi>
+  <mfrac>
+    <mi>q</mi>
+    <mi>p</mi>
+  </mfrac>
+</math>
+<p>此时的总概率（k=1，2，···）为：</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>k</mi>
+      <mo>=</mo>
+      <mn>0</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi mathvariant="normal">&#x221E;</mi>
+    </mrow>
+  </munderover>
+  <mfrac>
+    <mrow>
+      <msup>
+        <mi>&#x3BB;</mi>
+        <mi>k</mi>
+      </msup>
+      <msup>
+        <mi>e</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mo>&#x2212;</mo>
+          <mi>&#x3BB;</mi>
+        </mrow>
+      </msup>
+    </mrow>
+    <mrow>
+      <mi>k</mi>
+      <mo>!</mo>
+    </mrow>
+  </mfrac>
+  <mo>&#x22C5;</mo>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">{</mo>
+    <mtable columnspacing="1em" rowspacing="4pt">
+      <mtr>
+        <mtd>
+          <mo stretchy="false">(</mo>
+          <mi>q</mi>
+          <mrow data-mjx-texclass="ORD">
+            <mo>/</mo>
+          </mrow>
+          <mi>p</mi>
+          <msup>
+            <mo stretchy="false">)</mo>
+            <mrow data-mjx-texclass="ORD">
+              <mo stretchy="false">(</mo>
+              <mi>z</mi>
+              <mo>&#x2212;</mo>
+              <mi>k</mi>
+              <mo stretchy="false">)</mo>
+            </mrow>
+          </msup>
+        </mtd>
+        <mtd>
+          <mtext>if</mtext>
+          <mstyle scriptlevel="0">
+            <mspace width="0.278em"></mspace>
+          </mstyle>
+          <mi>k</mi>
+          <mo>&#x2264;</mo>
+          <mi>z</mi>
+        </mtd>
+      </mtr>
+      <mtr>
+        <mtd>
+          <mn>1</mn>
+        </mtd>
+        <mtd>
+          <mtext>if</mtext>
+          <mstyle scriptlevel="0">
+            <mspace width="0.278em"></mspace>
+          </mstyle>
+          <mi>k</mi>
+          <mo>&gt;</mo>
+          <mi>z</mi>
+        </mtd>
+      </mtr>
+    </mtable>
+    <mo data-mjx-texclass="CLOSE">}</mo>
+  </mrow>
+</math>
+<p>重新排列为：</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mn>1</mn>
+  <mo>&#x2212;</mo>
+  <munderover>
+    <mo data-mjx-texclass="OP">&#x2211;</mo>
+    <mrow data-mjx-texclass="ORD">
+      <mi>k</mi>
+      <mo>=</mo>
+      <mn>0</mn>
+    </mrow>
+    <mrow data-mjx-texclass="ORD">
+      <mi>z</mi>
+    </mrow>
+  </munderover>
+  <mfrac>
+    <mrow>
+      <msup>
+        <mi>&#x3BB;</mi>
+        <mi>k</mi>
+      </msup>
+      <msup>
+        <mi>e</mi>
+        <mrow data-mjx-texclass="ORD">
+          <mo>&#x2212;</mo>
+          <mi>&#x3BB;</mi>
+        </mrow>
+      </msup>
+    </mrow>
+    <mrow>
+      <mi>k</mi>
+      <mo>!</mo>
+    </mrow>
+  </mfrac>
+  <mrow data-mjx-texclass="INNER">
+    <mo data-mjx-texclass="OPEN">(</mo>
+    <mn>1</mn>
+    <mo>&#x2212;</mo>
+    <mo stretchy="false">(</mo>
+    <mi>q</mi>
+    <mrow data-mjx-texclass="ORD">
+      <mo>/</mo>
+    </mrow>
+    <mi>p</mi>
+    <msup>
+      <mo stretchy="false">)</mo>
+      <mrow data-mjx-texclass="ORD">
+        <mo stretchy="false">(</mo>
+        <mi>z</mi>
+        <mo>&#x2212;</mo>
+        <mi>k</mi>
+        <mo stretchy="false">)</mo>
+      </mrow>
+    </msup>
+    <mo data-mjx-texclass="CLOSE">)</mo>
+  </mrow>
+</math>
+<p>C 语言格式为</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;math.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">AttackerSuccessProbability</span>(<span style="color:#66d9ef">double</span> q, <span style="color:#66d9ef">int</span> z)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">double</span> p <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">-</span> q;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">double</span> lambda <span style="color:#f92672">=</span> z <span style="color:#f92672">*</span> (q <span style="color:#f92672">/</span> p);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">double</span> sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> i, k;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (k <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; k <span style="color:#f92672">&lt;=</span> z; k<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>	{
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">double</span> poisson <span style="color:#f92672">=</span> <span style="color:#a6e22e">exp</span>(<span style="color:#f92672">-</span>lambda);
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;=</span> k; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>			poisson <span style="color:#f92672">*=</span> lambda <span style="color:#f92672">/</span> i;
+</span></span><span style="display:flex;"><span>		sum <span style="color:#f92672">-=</span> poisson <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">pow</span>(q <span style="color:#f92672">/</span> p, z <span style="color:#f92672">-</span> k));
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> sum;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>比特币规定：6 个区块进行确认</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Walalata</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Categories | Walalata</title>
+<title>Posts | Walalata</title>
 <meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="description" content="Posts - Walalata">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/categories/">
+<link rel="canonical" href="http://localhost:1313/posts/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.6ac00093c6c8a784d8aeb94b276dbd6c5468e5b3c16b4fe74599df76c241a557.css" integrity="sha256-asAAk8bIp4TYrrlLJ229bFRo5bPBa0/nRZnfdsJBpVc=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/categories/index.xml">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/categories/">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/posts/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/">
 <noscript>
     <style>
         #theme-toggle,
@@ -102,13 +102,49 @@
         </ul>
     </nav>
 </header>
-<main class="main">
+<main class="main"> 
 <header class="page-header">
-    <h1>Categories</h1>
+  <h1>
+    Posts
+  </h1>
 </header>
 
-<ul class="terms-tags">
-</ul>
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">BitCoin: A Peer to Peer Electronic Cash System
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>论文解读 目标：一个点对点的双花问题（double-spending）解决方案
+方法：链式结构，hash，PoW，最长合法链，广播
+结果：不可篡改
+具体设计 交易：
+一枚电子货币是一连串数字签名（Digital signatures）：每一位所有者对前一次交易和下一位拥有者的公钥（Public Key）签署一个随机散列的数字签名，并将这个签名附加在电子货币尾部，电子货币就发送给下一位所有者。收款人通过对签名进行验证（使用发布者的公钥），就能够验证该链条的所有者。（此时并不能防范双花问题）
+BAPPECS-交易流程图 时间戳服务器（Timestamp Server）：（双花问题的解决）
+每个时间戳应当将前一个时间戳纳入 hash，形成链条
+BAPPECS-时间戳服务器 工作量证明（Proof of Work）：
+SHA-256
+所需平均工作量与所需零位数呈指数关系，并且可以通过执行单个哈希来验证。
+随机数（Nonce）使得区块满足；
+一旦CPU耗费的工作量被用来满足工作量证明，该区块就不能在不重做工作的情况下被更改。由于后续的区块在其之后被链接，更改该区块的工作将包括重做其后的所有区块。（不可篡改）
+BAPPECS-工作量证明 PoW 同时解决投票问题，本质是one-CPU-one-vote
+要修改过去的区块，攻击者必须重新完成该区块及其后所有区块的工作量证明，然后才能赶上并超过诚实节点的努力。（成功概率呈指数化递减）
+工作量证明的难度（the proof-of-work difficulty）采用移动平均目标的方法决定，即令难度指向令每小时生成区块的速度为某一个预定的平均数。
+网络：
+新交易向全节点广播 每个节点将新交易纳入一个区块 每个节点都尝试在自己的区块找到一个具有足够难度的工作量证明 当找到一个 proof-of-work，就向全节点广播 只有当区块中的交易都是合法且不曾存在过的，其它节点才会认同该区块的有效性（只要有足够多的节点承认就可以达成共识，对丢失信息有一定的容错能力） 其它节点表示接受的方法是跟随在该区块的末尾 可能出现同时广播，各节点会在率先收到的区块基础上进行工作，僵局（tie）会在下一个工作量证明的时候被打破，其中一个会变更长，成为合法链。
+激励：
+每个区块的第一笔交易（特殊交易）可以创造新币（由区块构建者）。 交易费（transaction fees）：输入值与输出值的差额 回收硬盘空间：
+Merkle tree：只有根（root）被纳入区块的 hash。老区块可以通过分枝拔除（stubbing）的方法被压缩。
+BAPPECS-Merkle tree 示意图 设定区块生成速率是 10 分钟 1 个。不含交易信息的区块头（Block header）大小仅有 80 字节。一年产生的数据位为4.2 MB。
+简化的支付确认（Simplified Payment Verification）：
+用户需要保留最长合法链的区块头副本（不断向网络发起询问），可以通过 merkle 的分支通向它被加上时间戳并纳入区块的那次交易。它不能自行验证交易的有效性，但通过追溯位置，可以看到交易被接受。
+BAPPECS-确认机制 当诚实节点控制网络时，检验机制是可靠的。但是可能被计算力占优的攻击者攻击成功。
+价值的组合与分割（Combining and Splitting Value）
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-23 18:12:47 +0800 CST'>July 23, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to BitCoin: A Peer to Peer Electronic Cash System" href="http://localhost:1313/posts/bitcoin-a-peer-to-peer-electronic-cash-system/"></a>
+</article>
     </main>
     
 <footer class="footer">

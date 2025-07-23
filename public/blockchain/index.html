@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Blockchains | Walalata</title>
+<meta name="keywords" content="">
+<meta name="description" content="Blockchains - Walalata">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/blockchain/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ac00093c6c8a784d8aeb94b276dbd6c5468e5b3c16b4fe74599df76c241a557.css" integrity="sha256-asAAk8bIp4TYrrlLJ229bFRo5bPBa0/nRZnfdsJBpVc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blockchain/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blockchain/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="list" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Walalata (Alt + H)">Walalata</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Blockchains
+  </h1>
+</header>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">BitCoin: A Peer to Peer Electronic Cash System
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>论文解读 目标：一个点对点的双花问题（double-spending）解决方案
+方法：链式结构，hash，PoW，最长合法链，广播
+结果：不可篡改
+具体设计 交易：
+一枚电子货币是一连串数字签名（Digital signatures）：每一位所有者对前一次交易和下一位拥有者的公钥（Public Key）签署一个随机散列的数字签名，并将这个签名附加在电子货币尾部，电子货币就发送给下一位所有者。收款人通过对签名进行验证（使用发布者的公钥），就能够验证该链条的所有者。（此时并不能防范双花问题）
+BAPPECS-交易流程图 时间戳服务器（Timestamp Server）：（双花问题的解决）
+每个时间戳应当将前一个时间戳纳入 hash，形成链条
+BAPPECS-时间戳服务器 工作量证明（Proof of Work）：
+SHA-256
+所需平均工作量与所需零位数呈指数关系，并且可以通过执行单个哈希来验证。
+随机数（Nonce）使得区块满足；
+一旦CPU耗费的工作量被用来满足工作量证明，该区块就不能在不重做工作的情况下被更改。由于后续的区块在其之后被链接，更改该区块的工作将包括重做其后的所有区块。（不可篡改）
+BAPPECS-工作量证明 PoW 同时解决投票问题，本质是one-CPU-one-vote
+要修改过去的区块，攻击者必须重新完成该区块及其后所有区块的工作量证明，然后才能赶上并超过诚实节点的努力。（成功概率呈指数化递减）
+工作量证明的难度（the proof-of-work difficulty）采用移动平均目标的方法决定，即令难度指向令每小时生成区块的速度为某一个预定的平均数。
+网络：
+新交易向全节点广播 每个节点将新交易纳入一个区块 每个节点都尝试在自己的区块找到一个具有足够难度的工作量证明 当找到一个 proof-of-work，就向全节点广播 只有当区块中的交易都是合法且不曾存在过的，其它节点才会认同该区块的有效性（只要有足够多的节点承认就可以达成共识，对丢失信息有一定的容错能力） 其它节点表示接受的方法是跟随在该区块的末尾 可能出现同时广播，各节点会在率先收到的区块基础上进行工作，僵局（tie）会在下一个工作量证明的时候被打破，其中一个会变更长，成为合法链。
+激励：
+每个区块的第一笔交易（特殊交易）可以创造新币（由区块构建者）。 交易费（transaction fees）：输入值与输出值的差额 回收硬盘空间：
+Merkle tree：只有根（root）被纳入区块的 hash。老区块可以通过分枝拔除（stubbing）的方法被压缩。
+BAPPECS-Merkle tree 示意图 设定区块生成速率是 10 分钟 1 个。不含交易信息的区块头（Block header）大小仅有 80 字节。一年产生的数据位为4.2 MB。
+简化的支付确认（Simplified Payment Verification）：
+用户需要保留最长合法链的区块头副本（不断向网络发起询问），可以通过 merkle 的分支通向它被加上时间戳并纳入区块的那次交易。它不能自行验证交易的有效性，但通过追溯位置，可以看到交易被接受。
+BAPPECS-确认机制 当诚实节点控制网络时，检验机制是可靠的。但是可能被计算力占优的攻击者攻击成功。
+价值的组合与分割（Combining and Splitting Value）
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-23 18:12:47 +0800 CST'>July 23, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to BitCoin: A Peer to Peer Electronic Cash System" href="http://localhost:1313/blockchain/bitcoin-a-peer-to-peer-electronic-cash-system/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Build My Simple Blog
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Hugo 介绍 Hugo 是一个用 Go 语言编写的静态网站生成器，可以在几秒钟内渲染出完整的网站。 Hugo有三种版本： 标准版（standard）、扩展版（extended）和扩展/部署版（extended/deploy）。标准版提供核心功能，而扩展版和扩展/部署版提供高级功能。 除非特定部署需求需要扩展/部署版，官方推荐使用扩展版。
+开始-本地调试 下载 Git 。 下载 Hugo ,地址：Hugo ，解压缩到目的目录，编辑环境变量。 初始化站点 hugo new site myblog # 生成站点目录，myblog 可以是任何站点名称 cd myblog # 进入创建的站点 下载主题，hugo 提供很多主题Hugo themes，放到themes文件夹下 需要在hugo.toml中指定主题名（同主题文件夹名称一致），例如： baseURL = &#39;https://example.org/&#39; languageCode = &#39;en-us&#39; title = &#39;My New Hugo Site&#39; theme = &#39;PaperMod&#39; 生成第一篇文档 记得修改 draft = false，默认不渲染草稿（draft = true）. myblog&gt;hugo new content/posts/first-post.md # 生成 Markdown 文件 发现换行存在问题，查询相关资料，发现 Hugo 中的换行需要两个回车，但是可以通过修改hugo.toml保持一致。添加如下代码段： [markup.goldmark.renderer] hardWraps = true 部署-Netlify 将项目托管到 Github 上 创建一个公开的仓库用来存放项目。 git init git add. git commit -m &#34;first commit&#34; git branch -M main git remote add origin https://github.com/iceube/walalata.git git push -u origin main 如果有网络问题，可以看看自己科学上网的代理端口是什么，修改成对应的 # 临时使用代理（示例） export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897 git push 在 Netlify 上部署 参考：在 Netlify 上托管 | Hugo官方文档 可是使用 GitHub 账号登陆。 一些注意点： Build command: hugo Publish directory: public 添加环境变量： key: HUGO_VERSION value: 版本号（例如：0.148.1） 修改 hugo.toml中的baseURL为分配给你的站点 后续问题 md 不能显示内嵌的 html 修改hugo.toml，补充unsafe = true，但是会和 hardWraps (解决两个回车换行)冲突，看自己的需求进行取舍： [markup.goldmark.renderer] hardWraps = false unsafe = true </p>
+  </div>
+  <footer class="entry-footer"><span title='2025-07-23 16:48:34 +0800 CST'>July 23, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Build My Simple Blog" href="http://localhost:1313/blockchain/build-my-simple-blog/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Walalata</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

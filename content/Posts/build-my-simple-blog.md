@@ -66,9 +66,8 @@ theme = 'PaperMod'
 		4. 修改 `hugo.toml`中的`baseURL`为分配给你的站点
 ## 后续问题
 1. md 不能显示内嵌的 html
-	修改`hugo.toml`，补充`unsafe = true`：
+	修改`hugo.toml`，补充`unsafe = true`，但是会和 `hardWraps` (解决两个回车换行)冲突，看自己的需求进行取舍：
 	~~~ toml
 	[markup.goldmark.renderer]
-	  hardWraps = true
+	  hardWraps = false
 	  unsafe = true
-	~~~

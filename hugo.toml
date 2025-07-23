@@ -1,13 +1,12 @@
 baseURL = 'https://walalata.netlify.app/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Walalata'
 theme = 'PaperMod'
 
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
-      hardWraps = true   # 强制单换行转<br>
       unsafe = true      # 允许原始HTML
 
-    [markup.goldmark.extensions]
-      typographer = false # 关闭智能标点（避免干扰换行）
+
+      
